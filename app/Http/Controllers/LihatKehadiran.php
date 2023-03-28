@@ -8,6 +8,6 @@ class LihatKehadiran extends Controller
 {
     public function index()
     {
-        echo "Ini Halaman Lihat Kehadiran";
+        return view('layout.user.kehadiran');
     }
 }
