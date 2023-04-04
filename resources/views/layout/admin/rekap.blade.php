@@ -62,6 +62,7 @@
 
                 <thead>
                     <tr>
+                        <th>No</th>
                         <th>Nama Kegiatan</th>
                         <th>Tanggal Kegiatan</th>
                         <th>Tempat Kegiatan</th>
@@ -70,6 +71,7 @@
                 </thead>
                 <tfoot>
                     <tr>
+                        <th>No</th>
                         <th>Nama Kegiatan</th>
                         <th>Tanggal Kegiatan</th>
                         <th>Tempat Kegiatan</th>
@@ -80,6 +82,7 @@
                     {{-- Data --}}
                     @foreach ($event as $item)
                     <tr>     
+                        <td align="center" >{{ $loop->iteration }}</td>
                         <td>{{ $item->nama_event }}</td>
                         <td>{{ $item->tgl_event }}</td>
                         <td>{{ $item->lokasi_event }}</td>
@@ -87,9 +90,10 @@
                             <form class="form-control-user mb-1" action="cetak/absen/{{ $item->id }}" method="POST">
                                 @csrf   
                                 <button class="btn btn-sm btn-primary"  type="submit">
-                                <i class="fa fa-eye" ></i> Lihat</button>
+                                <i class="fa fa-download" ></i> Download</button>
                             </form>
-                            <form class="form-control-user mb-1">
+                            <form id="id_event" class="form-control-user mb-1" action="edit-absen-{{$item->id}}" method="POST">
+                                @csrf
                                 <button class="btn btn-sm btn-warning">
                                 <i class="fa fa-edit" ></i> Edit</button>
                             </form>
@@ -150,7 +154,6 @@
             }       
         }
     }
-
 </script>
 
 

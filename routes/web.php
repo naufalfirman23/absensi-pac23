@@ -47,10 +47,14 @@ Route::group(['middleware'=>['auth']], function(){
         // Absensi -event
         Route::get('master-absen',[AbsensiController::class, 'index']);
         Route::get('absenin-rekan',[AbsensiController::class, 'absenin']);
+        Route::post('hapus/absen/{id}',[AbsensiController::class, 'hapus_absen']);
+        Route::post('edit-absen-{id}',[AbsensiController::class, 'editabsen']);
         Route::post('cetak/absen/{id}',[AbsensiController::class, 'cetakabsen']);
         Route::post('tambah-event',[AbsensiController::class, 'tambahevent']);
         Route::post('hapus/event/{id}',[AbsensiController::class, 'hapusevent']);
         Route::post('scan-code',[AbsensiController::class, 'validasi'])->name('absenin');
+        Route::post('scan-ulang-{id}',[AbsensiController::class, 'absen_ulang'])->name('scan_ulang');
+        Route::get('scan-ulang-{id}',[AbsensiController::class, 'scanlagi']);
     });
     Route::group(['middleware'=>['cekUserLogin:2']],function(){
         Route::resource('cek-hadir', LihatKehadiran::class);

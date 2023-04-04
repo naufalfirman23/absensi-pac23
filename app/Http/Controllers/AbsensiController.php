@@ -46,15 +46,12 @@ class AbsensiController extends Controller
         
     }
 
-
-
     public function validasi(Request $request){
 
         $event = ModelEvents::latest()->first();
         $data = Pengurus::where('id_pengurus', $request->qr_code)->first();
 
         if($data){
-            // $dataabsen = ModelAbsensi::where('id_pengurus', $request->qr_code)->get();
             $dataabsen = DB::table('absensi')->where('id_pengurus',$data->id_pengurus)->where('id_event',$event->id)->first();
             if($dataabsen){
                 return response()->json([
@@ -103,5 +100,65 @@ class AbsensiController extends Controller
         return view('layout.admin.cetakkehadiran', compact('data_absensis'));
     }
 
+    public function editabsen($id)
+    {
+        $data_absen = ModelAbsensi::where('id_event', '=', $id)->get();
+        $data_event = ModelEvents::where('id' , '=',$id )->get();
+        $data_pengurus = Pengurus::all();
+        $data_dept = ModelsDepartemen::all();
+        return view("layout.admin.editabsen", compact('data_event', 'data_absen', 'data_pengurus', 'data_dept'));
+    }
+    
+    public function hapus_absen($id)
+    {
+        $data = ModelAbsensi::find($id);
+        $data->delete();
+    }
 
+    public function absen_ulang(Request $request, $id)
+    {
+        $event = ModelEvents::where('id','=',$id);
+        $data = Pengurus::where('id_pengurus', $request->qr_code)->first();
+
+        if($data){
+            $dataabsen = DB::table('absensi')->where('id_pengurus',$data->id_pengurus)->where('id_event',$event->id)->first();
+            if($dataabsen){
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Sudah Melakukan Absensi',
+                    'hasil' => $dataabsen
+                ]);
+                
+            }
+            else{
+                ModelAbsensi::create(   
+                    [
+                        'id_event' => $event->id,   
+                        'id_pengurus' => $request->qr_code,
+                        'status' => 'Hadir'
+                        ]
+                    );
+                    return response()->json([
+                        'status' => 200,
+                        'hasil' => $dataabsen,
+                        'message' => 'Berhasil Absensi'
+                ]);
+             }
+
+        }else{
+            return response()->json([
+                'status' => 400,
+                'message' => 'Data Tidak Ditemukan'
+            ]);
+        }
+               
+        return redirect('scan-ulang-$id');
+    }
+    
+    public function scanlagi($id)
+    {
+
+        $data_event = ModelEvents::where('id' , '=',$id )->get();
+        return view('layout.admin.scan_ulang');
+    }
 }
